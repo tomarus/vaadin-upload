@@ -865,6 +865,10 @@ Custom property | Description | Default
 
     _isMultiple: function() {
       return this.maxFiles != 1;
+    },
+
+    clearComplete: function() {
+      this.files = this.files.filter(function(file) { return !file.complete; });
     }
   });
 
