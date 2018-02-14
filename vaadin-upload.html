@@ -450,13 +450,16 @@ Custom property | Description | Default
     },
 
     listeners: {
-      'dragover': '_onDragover',
-      'dragleave': '_onDragleave',
-      'drop': '_onDrop',
       'file-retry': '_onFileRetry',
       'file-abort': '_onFileAbort',
       'file-remove': '_onFileRemove',
       'file-start': '_onFileStart'
+    },
+
+    ready: function() {
+        window.addEventListener('dragover', this._onDragover.bind(this))
+        window.addEventListener('dragleave', this._onDragleave.bind(this))
+        window.addEventListener('drop', this._onDrop.bind(this))
     },
 
     _formatSize: function(bytes) {
@@ -547,7 +550,7 @@ Custom property | Description | Default
             get: function() {
               var width2 = this.containerMetrics.width * this.containerMetrics.width;
               var height2 = this.containerMetrics.height * this.containerMetrics.height;
-              var waveRadius = Math.sqrt(width2 + height2) * 1.1 + 5;
+              var waveRadius = Math.sqrt(width2 + height2) * 2.2 + 5;
 
               var duration = 0.9 + 0.2 * (waveRadius / 300);
               var timeNow = this.mouseInteractionSeconds / duration;
@@ -574,14 +577,10 @@ Custom property | Description | Default
     },
 
     _onDragleave: function(event) {
-      // Dragleave sometimes fired on children, skipping them. Fixes flickeing
-      // when quickly dragging over.
-      if (Polymer.dom(event).rootTarget === this) {
-        event.preventDefault();
-        if (this._dragover && !this.nodrop) {
-          this._dragRippleAction('up', event);
-          this._dragover = this._dragoverValid = false;
-        }
+      event.preventDefault();
+      if (this._dragover && !this.nodrop) {
+        this._dragRippleAction('up', event);
+        this._dragover = this._dragoverValid = false;
       }
     },
 
